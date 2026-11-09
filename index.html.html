@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Wildlife Deterrent Loop · CpE305</title>
+<style>
+:root{--paper:#f3eee2;--sheet:#faf7ef;--ink:#232a25;--mu:#6d7168;--rule:#d9d2bf;--fo:#2f5d3a;--fo2:#cfe0cf;--oc:#c0821f;--ru:#b4452c;--sl:#4d6b7c;--serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;--sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,system-ui,sans-serif}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--paper);color:var(--ink);font:400 15px/1.55 var(--sans);-webkit-font-smoothing:antialiased}
+.shell{display:grid;grid-template-columns:320px minmax(0,1fr);min-height:100vh;background:linear-gradient(90deg,var(--sheet) 320px,var(--rule) 320px,var(--rule) 321px,transparent 321px)}
+aside{position:sticky;top:0;height:100vh;overflow:auto;padding:36px 28px}
+aside h1{margin:0;font:600 27px/1.15 var(--serif);letter-spacing:-.01em}
+aside .by{margin:12px 0 0;color:var(--mu);font-size:13px;line-height:1.5}
+aside .by a{color:var(--fo)}
+aside h3{margin:30px 0 4px;font:600 12px/1 var(--sans);color:var(--mu);letter-spacing:.02em}
+aside .hint{margin:0 0 6px;color:var(--mu);font-size:12.5px}
+.f{padding:11px 0;border-bottom:1px solid var(--rule)}.f:last-of-type{border-bottom:0}
+.f .t{display:flex;justify-content:space-between;align-items:baseline}.f b{font-weight:600;font-size:14px}.f output{font:600 13px var(--sans);color:var(--fo);font-variant-numeric:tabular-nums}.f.mod b,.f.mod output{color:var(--oc)}
+.f small{display:block;color:var(--mu);font-size:12px;margin-top:1px}
+input[type=range]{width:100%;height:3px;margin:12px 0 2px;appearance:none;-webkit-appearance:none;background:var(--rule);border-radius:2px;outline:0;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--fo);border:3px solid var(--sheet);box-shadow:0 0 0 1px var(--fo)}
+input[type=range]::-moz-range-thumb{width:12px;height:12px;border-radius:50%;background:var(--fo);border:3px solid var(--sheet);box-shadow:0 0 0 1px var(--fo)}
+.mod input[type=range]::-webkit-slider-thumb{background:var(--oc);box-shadow:0 0 0 1px var(--oc)}.mod input[type=range]::-moz-range-thumb{background:var(--oc);box-shadow:0 0 0 1px var(--oc)}
+#rp{margin-top:22px;width:100%;font:600 14px var(--sans);color:var(--sheet);background:var(--fo);border:0;border-radius:6px;padding:10px;cursor:pointer}#rp:hover{background:#26503104;background:#264e31}
+main{padding:44px 48px 64px;max-width:1040px;min-width:0}
+main>section{margin-bottom:54px}
+.kick{margin:0 0 6px;color:var(--oc);font:600 13px var(--sans)}
+h2{margin:0 0 6px;font:600 29px/1.2 var(--serif);letter-spacing:-.01em}
+.lead{margin:0 0 20px;color:var(--mu);max-width:680px}
+.sheet{background:var(--sheet);border:1px solid var(--rule);border-radius:4px;padding:22px 24px}
+svg text{font-family:var(--sans)}
+.bx{fill:var(--paper);stroke:var(--ink);stroke-width:1.2}.bx.fb{stroke:var(--oc);stroke-width:1.6}.bx.gr{fill:var(--fo2);stroke:var(--fo)}
+.bt{fill:var(--ink);font-size:13px;font-weight:600;text-anchor:middle}.bs{fill:var(--mu);font-size:11px;text-anchor:middle}
+.ln{fill:none;stroke:var(--ink);stroke-width:1.3}.ln.fb{stroke:var(--oc);stroke-width:1.8}
+.strip{margin-bottom:18px}
+.strip header{display:flex;justify-content:space-between;align-items:baseline;gap:16px;margin-bottom:8px}
+.strip h3{margin:0;font:600 19px var(--serif)}.strip h3 span{color:var(--mu);font:400 13.5px var(--sans);margin-left:8px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{font:600 12.5px var(--sans);padding:3px 10px;border-radius:99px;background:var(--paper);border:1px solid var(--rule);color:var(--ink);font-variant-numeric:tabular-nums}
+.chip.g{background:var(--fo2);border-color:#a9c6ae;color:var(--fo)}.chip.r{background:#f4d9d0;border-color:#e3b3a4;color:var(--ru)}.chip.o{background:#f4e4c3;border-color:#e2c98e;color:#8a5a0c}
+canvas{width:100%;height:230px;display:block}
+.key{display:flex;gap:22px;flex-wrap:wrap;margin:4px 2px 0;color:var(--mu);font-size:12.5px}
+.key i{display:inline-block;vertical-align:middle;margin-right:7px}
+.cmp{display:grid;gap:22px}
+.m{display:grid;grid-template-columns:170px minmax(0,1fr);gap:16px;align-items:center}
+.m .l b{display:block;font-weight:600}.m .l small{color:var(--mu);font-size:12px}
+.bars{display:grid;gap:5px}
+.br{display:grid;grid-template-columns:minmax(0,1fr) 64px;align-items:center;gap:10px}
+.br .tr{height:14px;background:#ece6d6;border-radius:2px;position:relative;overflow:hidden}.br .fi{position:absolute;inset:0 auto 0 0;border-radius:2px;min-width:2px}
+.br em{font:600 13px var(--sans);font-style:normal;font-variant-numeric:tabular-nums;text-align:right}.br em small{font-weight:400;color:var(--mu);font-size:11.5px;margin-left:3px}
+.leg2{display:flex;gap:18px;margin:2px 0 18px;color:var(--mu);font-size:12.5px;flex-wrap:wrap}.leg2 i{display:inline-block;width:11px;height:11px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.notes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 36px}
+.notes p{margin:0}.notes b{display:block;font:600 16px var(--serif);margin-bottom:2px}
+.ref{margin-top:48px;padding-top:18px;border-top:1px solid var(--rule);color:var(--mu);font-size:13px;max-width:760px}
+@media(max-width:980px){.shell{grid-template-columns:1fr}aside{position:static;height:auto;border-bottom:1px solid var(--rule);background:var(--sheet)}.shell{background:none}main{padding:30px 20px}.notes{grid-template-columns:1fr}.m{grid-template-columns:1fr}}
+</style></head><body>
+<div class="shell">
+<aside>
+<h1>Wildlife deterrent<br>feedback loop</h1>
+<p class="by"><span id="whoName"></span><br>CpE305 · Feedback and Control Systems<br>Based on <a href="https://www.mdpi.com/1424-8220/25/20/6415" target="_blank" rel="noopener">Hajder, Kolbusz &amp; Liput (2025)</a></p>
+<h3>Parameters</h3><p class="hint">Original and modified differ only in the threshold.</p>
+<div class="f"><div class="t"><b>Threshold, original</b><output></output></div><small>Confidence needed to fire the deterrent</small><input type="range" id="p_t1" min=".5" max=".98" step=".01" value=".7"></div>
+<div class="f mod"><div class="t"><b>Threshold, modified</b><output></output></div><small>The one parameter we change</small><input type="range" id="p_t2" min=".5" max=".98" step=".01" value=".85"></div>
+<div class="f"><div class="t"><b>Deterrent hold time</b><output></output></div><small>Minutes the deterrent stays on</small><input type="range" id="p_h" min="3" max="20" step="1" value="10"></div>
+<div class="f"><div class="t"><b>Deterrent strength</b><output></output></div><small>How hard it pushes the animal away</small><input type="range" id="p_k" min=".04" max=".3" step=".01" value=".12"></div>
+<div class="f"><div class="t"><b>Sensor noise</b><output></output></div><small>Spread of the AI confidence score</small><input type="range" id="p_n" min="0" max=".12" step=".01" value=".04"></div>
+<div class="f"><div class="t"><b>Sensor check interval</b><output></output></div><small>Minutes between readings</small><input type="range" id="p_l" min="1" max="8" step="1" value="2"></div>
+<button id="rp">Replay night</button>
+</aside>
+
+<main>
+<section>
+<p class="kick">Block diagram</p><h2>Input, controller, process, output, with feedback</h2>
+<p class="lead">The journal system is a closed loop: after a deterrent fires, the sensors keep watching and the controller decides again from the new reading.</p>
+<div class="sheet"><svg viewBox="0 0 900 290" style="width:100%;height:auto;display:block">
+<defs><marker id="mkA" markerUnits="userSpaceOnUse" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M1,1L9,5L1,9z" fill="#232a25"/></marker><marker id="mkB" markerUnits="userSpaceOnUse" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M1,1L9,5L1,9z" fill="#c0821f"/></marker></defs>
+<rect class="bx" x="8" y="26" width="150" height="70" rx="6"/><text class="bt" x="83" y="55">Reference</text><text class="bs" x="83" y="72">No target animal</text><text class="bs" x="83" y="85">in protected area</text>
+<circle class="bx" cx="214" cy="61" r="20"/><text class="bt" x="214" y="67" style="font-size:18px;font-weight:400">Σ</text><text class="bs" x="195" y="52">+</text><text class="bs" x="201" y="96">−</text>
+<rect class="bx gr" x="268" y="26" width="190" height="70" rx="6"/><text class="bt" x="363" y="53">AI controller</text><text class="bs" x="363" y="70">Edge AI: classify, score,</text><text class="bs" x="363" y="83">compare with threshold T</text>
+<rect class="bx" x="516" y="26" width="140" height="70" rx="6"/><text class="bt" x="586" y="55">Actuator</text><text class="bs" x="586" y="72">Sound, light,</text><text class="bs" x="586" y="85">scent deterrent</text>
+<rect class="bx" x="714" y="26" width="178" height="70" rx="6"/><text class="bt" x="803" y="55">Plant</text><text class="bs" x="803" y="72">Protected field and</text><text class="bs" x="803" y="85">wildlife behaviour</text>
+<rect class="bx" x="714" y="190" width="178" height="70" rx="6"/><text class="bt" x="803" y="219">Output</text><text class="bs" x="803" y="236">Fewer intrusions</text><text class="bs" x="803" y="249">(about 95% for roe deer)</text>
+<rect class="bx fb" x="430" y="190" width="226" height="70" rx="6"/><text class="bt" x="543" y="219">Feedback sensors</text><text class="bs" x="543" y="236">PIR, day/night camera,</text><text class="bs" x="543" y="249">microphone</text>
+<g class="ln" marker-end="url(#mkA)"><path d="M158 61H192"/><path d="M236 61H268"/><path d="M458 61H516"/><path d="M656 61H714"/><path d="M803 96V190"/></g>
+<path class="ln fb" marker-end="url(#mkB)" d="M714 225H656"/>
+<path class="ln fb" marker-end="url(#mkB)" d="M430 225H214V81"/>
+<text class="bs" x="352" y="45" style="display:none"></text>
+<text class="bs" x="363" y="116">error e = target animal still present</text>
+<text class="bs" x="322" y="214" style="text-anchor:middle;fill:#c0821f;font-weight:600">Updated detection</text><text class="bs" x="322" y="256" style="text-anchor:middle">Feedback signal</text>
+</svg></div>
+</section>
+
+<section>
+<p class="kick">Simulation</p><h2>One night, three runs</h2>
+<p class="lead">Eight hours, one reading every few minutes. Roe deer enter the field three times. The fox and the moving brush are not targets but can still score high enough to trip a low threshold.</p>
+<div id="strips"></div>
+<div class="key"><span><i style="width:16px;height:9px;background:#cfe0cf;border:1px solid #2f5d3a"></i>Animal presence in field</span><span><i style="width:16px;height:0;border-top:2px solid #232a25"></i>AI confidence score</span><span><i style="width:16px;height:0;border-top:2px dashed #b4452c"></i>Threshold T</span><span><i style="width:16px;height:7px;background:#c0821f"></i>Deterrent on</span></div>
+</section>
+
+<section>
+<p class="kick">Comparison</p><h2>What changing the threshold did</h2>
+<p class="lead">A low threshold catches more animals and also fires on things that are not targets. A high threshold stays quiet, and can stay quiet when it should not.</p>
+<div class="sheet"><div class="leg2"><span><i style="background:#2f5d3a"></i>Original</span><span><i style="background:#c0821f"></i>Modified</span><span><i style="background:#9a9f94"></i>No feedback</span></div><div class="cmp" id="cmp"></div></div>
+</section>
+
+<section>
+<p class="kick">Reading the result</p><h2>Observations</h2>
+<div class="notes" id="notes"></div>
+</section>
+
+<p class="ref">Simplified model in normalized units for a class exercise. It illustrates the control idea and is not the paper's measured data. Hajder, M., Kolbusz, J., &amp; Liput, M. (2025). An AI-based integrated multi-sensor system with edge computing for the adaptive management of human–wildlife conflict. <i>Sensors, 25</i>(20), 6415. <a href="https://doi.org/10.3390/s25206415" style="color:#2f5d3a">https://doi.org/10.3390/s25206415</a></p>
+</main></div>
+<script>
+const N=480,TAU=12,EVS=[{c:60,w:26,m:.92,t:1,n:'Roe deer'},{c:130,w:9,m:.76,t:0,n:'Fox'},{c:190,w:30,m:.78,t:1,n:'Deer (fog)'},{c:270,w:10,m:.74,t:0,n:'Wind / brush'},{c:340,w:24,m:.88,t:1,n:'Roe deer'},{c:425,w:9,m:.8,t:0,n:'Fox'}];
+function mb(a){return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const RW=mb(23),gz=()=>Math.sqrt(-2*Math.log(RW()+1e-9))*Math.cos(6.2832*RW()),Z=Array.from({length:N},gz);
+const env=(e,t)=>Math.exp(-(((t-e.c)/e.w)**2));
+function sim(P,k){const T=k==='C2'?P.T2:P.T1,fb=k!=='X';let s=0,det=0,left=0,once=false,c=0,S=[],C=[],D=[],ev=[];
+ for(let t=0;t<N;t++){let uT=0,mw=0,nt=0;for(const e of EVS){const u=env(e,t);if(e.t){uT+=u;mw+=u*e.m}else nt=Math.max(nt,e.m*u)}uT=Math.min(1,uT);const mT=uT>.01?mw/Math.max(.0001,EVS.filter(e=>e.t).reduce((q,e)=>q+env(e,t),0)):0;
+  s+=(uT-s)/TAU-det*P.k*s;s=Math.max(0,Math.min(1,s));
+  if(t%P.l===0)c=Math.max(0,Math.min(1,Math.max(mT*s,nt)+P.n*Z[t]));
+  if(det){if(--left<=0)det=0}
+  if(!det&&c>=T&&(fb||!once)){det=1;left=P.h;once=true;ev.push(t)}
+  S.push(s);C.push(c);D.push(det)}
+ const tw=EVS.filter(e=>e.t);let hit=0,miss=0;for(const e of tw){const a=Math.max(0,e.c-e.w*1.6|0),b=Math.min(N-1,e.c+e.w*1.6|0);const intr=Math.max(...S.slice(a,b+1))>=.5,act=ev.some(x=>x>=a&&x<=b);if(act)hit++;else if(intr)miss++}
+ let fa=0;for(const x of ev){if(!tw.some(e=>env(e,x)>.25))fa++}
+ return{k,T,S,C,D,ev,n:ev.length,hit,miss,fa,intr:S.filter(v=>v>=.5).length,on:D.reduce((q,v)=>q+v,0),pk:Math.max(...S)}}
+const STUDENT='Cruz, Leivan Maxwell N. · BSCPE 3A';
+const G=id=>document.getElementById(id),$$=s=>[...document.querySelectorAll(s)];
+G('whoName').textContent=STUDENT;
+const ids=['p_t1','p_t2','p_h','p_k','p_n','p_l'],KEY=['T1','T2','h','k','n','l'];
+const SC=[{k:'C1',n:'Original',s:'threshold T₁'},{k:'C2',n:'Modified',s:'higher threshold T₂'},{k:'X',n:'No feedback',s:'deterrent fires once, no re-check'}];
+G('strips').innerHTML=SC.map(s=>`<div class="sheet strip"><header><h3>${s.n}<span>${s.s}</span></h3><div class="chips" id="ch${s.k}"></div></header><canvas id="cv${s.k}"></canvas></div>`).join('');
+let D=null,P={},ps={p:0,play:false,last:0},raf=0;
+const hh=m=>{const t=(20*60+Math.round(m))%1440;return String(t/60|0).padStart(2,'0')+':'+String(t%60).padStart(2,'0')};
+function compute(){ids.forEach((id,i)=>P[KEY[i]]=+G(id).value);
+ $$('aside .f output').forEach(o=>{const i=o.closest('.f').querySelector('input');o.textContent=i.id==='p_h'||i.id==='p_l'?(+i.value)+' min':i.id==='p_k'?(+i.value).toFixed(2):(+i.value).toFixed(2)});
+ D={C1:sim(P,'C1'),C2:sim(P,'C2'),X:sim(P,'X')};
+ const a=D.C1,b=D.C2,x=D.X;
+ const M=[{l:'Intrusion time',s:'minutes animals were inside the field',f:q=>q.intr,u:'min',sc:N},{l:'Deterrent on',s:'minutes the deterrent ran',f:q=>q.on,u:'min',sc:N},{l:'False alarms',s:'fired with no target animal present',f:q=>q.fa,u:'',sc:Math.max(6,a.fa,b.fa,x.fa)},{l:'Intrusions missed',s:'target visits never answered',f:q=>q.miss,u:'of 3',sc:3}];
+ const col={C1:'#2f5d3a',C2:'#c0821f',X:'#9a9f94'};
+ G('cmp').innerHTML=M.map(m=>`<div class="m"><div class="l"><b>${m.l}</b><small>${m.s}</small></div><div class="bars">${[a,b,x].map(q=>`<div class="br"><div class="tr"><div class="fi" style="width:${Math.min(100,m.f(q)/m.sc*100)}%;background:${col[q.k]}"></div></div><em>${m.f(q)}${m.u?`<small>${m.u}</small>`:''}</em></div>`).join('')}</div></div>`).join('');
+ const dI=b.intr-a.intr;
+ G('notes').innerHTML=[
+ ['Lower threshold, more coverage',`At T = ${a.T.toFixed(2)} the controller answered ${a.hit} of 3 deer visits, but it also fired ${a.fa} time${a.fa===1?'':'s'} on the fox and brush, running the deterrent for ${a.on} minutes.`],
+ ['Higher threshold, fewer false alarms',`At T = ${b.T.toFixed(2)} there were ${b.fa} false alarm${b.fa===1?'':'s'}, but ${b.miss?'the foggy deer visit scored below the threshold and was never answered':'every visit was answered'}. Intrusion time ${dI>=0?'rose':'fell'} from ${a.intr} to ${b.intr} minutes.`],
+ ['What the feedback does',`Without the re-check the deterrent fires once and the animals drift back: ${x.intr} intrusion minutes and ${x.miss} visits missed. Re-reading the sensors lets the controller fire again when an animal returns.`],
+ ['Engineering trade-off',`The threshold is a choice between wasted deterrent time, which can teach animals to ignore it, and unprotected crops. The right value depends on how costly each is.`]
+ ].map(([h,t])=>`<p><b>${h}</b>${t}</p>`).join('')}
+const FONT='11.5px -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif';
+function fit(cv){const r=cv.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2);if(cv.width!==Math.round(r.width*d)||cv.height!==Math.round(r.height*d)){cv.width=Math.round(r.width*d);cv.height=Math.round(r.height*d)}const g=cv.getContext('2d');g.setTransform(d,0,0,d,0,0);return[g,r.width,r.height]}
+function draw(k){const cv=G('cv'+k),[g,W,H]=fit(cv),r=D[k],p=ps.p,i=Math.min(N-1,p|0);
+ const LM=34,RM=6,TM=22,BM=22,DB=16,h=H-TM-BM-DB-6,X=t=>LM+t/N*(W-LM-RM),Y=v=>TM+h*(1-v);
+ g.clearRect(0,0,W,H);g.font=FONT;
+ for(const e of EVS){const x0=X(e.c-e.w*1.6),x1=X(e.c+e.w*1.6);g.fillStyle=e.t?'#2f5d3a14':'#4d6b7c14';g.fillRect(x0,TM,x1-x0,h);g.fillStyle=e.t?'#2f5d3a':'#4d6b7c';g.textAlign='center';g.fillText(e.n,X(e.c),13)}
+ g.strokeStyle='#ddd6c3';g.lineWidth=1;g.fillStyle='#8a8d83';g.textAlign='right';for(const v of[0,.5,1]){g.beginPath();g.moveTo(LM,Math.round(Y(v))+.5);g.lineTo(W-RM,Math.round(Y(v))+.5);g.stroke();g.fillText(v.toFixed(1),LM-6,Y(v)+4)}
+ g.textAlign='center';for(let q=0;q<=8;q+=2){g.fillText(hh(q*60),Math.min(Math.max(X(q*60),LM+14),W-RM-14),H-6)}
+ const fill=(arr)=>{g.beginPath();g.moveTo(X(0),Y(0));for(let j=0;j<=i;j++)g.lineTo(X(j),Y(arr[j]));g.lineTo(X(i),Y(0));g.closePath();g.fillStyle='#cfe0cfcc';g.fill();g.strokeStyle='#2f5d3a';g.lineWidth=1.2;g.beginPath();for(let j=0;j<=i;j++)g[j?'lineTo':'moveTo'](X(j),Y(arr[j]));g.stroke()};
+ fill(r.S);
+ g.setLineDash([5,4]);g.strokeStyle='#b4452c';g.lineWidth=1.3;g.beginPath();g.moveTo(LM,Y(r.T));g.lineTo(W-RM,Y(r.T));g.stroke();g.setLineDash([]);
+ g.fillStyle='#b4452c';g.textAlign='left';g.fillText('T = '+r.T.toFixed(2),LM+4,Y(r.T)-5);
+ g.strokeStyle='#232a25';g.lineWidth=1.5;g.lineJoin='round';g.beginPath();for(let j=0;j<=i;j++)g[j?'lineTo':'moveTo'](X(j),Y(r.C[j]));g.stroke();
+ g.fillStyle='#c0821f';for(let j=0;j<=i;j++)if(r.D[j])g.fillRect(X(j),H-BM-DB,Math.max(1,(W-LM-RM)/N+.6),DB);
+ g.strokeStyle='#8a8d83';g.beginPath();g.moveTo(LM,H-BM-DB+.5);g.lineTo(W-RM,H-BM-DB+.5);g.stroke();
+ g.fillStyle='#8a8d83';g.textAlign='right';g.fillText('on',LM-6,H-BM-3);
+ const c=r.ev.filter(t=>t<=p).length;
+ const done=p>=N-2,bad=r.miss>0,fa=r.fa>0;
+ G('ch'+k).innerHTML=`<span class="chip">${done?r.n:c} activation${(done?r.n:c)===1?'':'s'}</span><span class="chip ${done?(fa?'r':'g'):''}">${done?r.fa:'…'} false</span><span class="chip ${done?(bad?'r':'g'):''}">${done?r.miss:'…'} missed</span><span class="chip o">${done?r.intr:Math.min(r.intr,r.S.slice(0,i+1).filter(v=>v>=.5).length)} min intrusion</span>`}
+function drawAll(){if(D)SC.forEach(s=>draw(s.k))}
+function tick(ts){if(ps.play){ps.p=Math.min(N-1,ps.p+Math.min(ts-ps.last,100)/1000*130);ps.last=ts;if(ps.p>=N-1)ps.play=false}drawAll();raf=ps.play?requestAnimationFrame(tick):0}
+function run(){ps.p=0;ps.play=true;ps.last=performance.now();if(!raf)raf=requestAnimationFrame(tick)}
+G('rp').onclick=run;
+let tm;ids.forEach(i=>G(i).oninput=()=>{clearTimeout(tm);tm=setTimeout(()=>{compute();run()},80)});
+addEventListener('resize',drawAll);compute();(matchMedia('(prefers-reduced-motion:reduce)').matches||location.hash==='#end')?(ps.p=N-1,drawAll()):run();
+</script></body></html>
